@@ -1,0 +1,19 @@
+{
+    "name": "flatline/hosts",
+    "description": "CLI tool to manage hosts file",
+    "minimum-stability": "dev",
+    "authors": [
+        {
+            "name": "Luciano Longo",
+            "email": "luciano.longo@gmail.com"
+        }
+    ],
+    "require": {
+        "symfony/console": "v2.2.1"
+    },
+    "autoload": {
+        "psr-0": {
+            "Flatline": "src/"
+        }
+    }
+}

@@ -11,10 +11,11 @@ namespace Flatline\Command\Hosts;
 
 
 use Flatline\Command\Command;
-use Symfony\Component\Console\Formatter\OutputFormatterStyle;
+use Flatline\Command\Exception\HostsFileNotReadable;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 
 class ListCommand extends Command
 {
@@ -34,73 +35,50 @@ class ListCommand extends Command
     {
         parent::execute($in, $out);
 
-        // Check if hosts file is writable
-        if (!is_readable($this->hostsfile)) {
-            $out->writeln("<error>Can't read hosts file! Run the command as root.</error>");
+        $enabled_only = $in->getOption('enabled-only');
+        $disabled_only = $in->getOption('disabled-only');
+
+        // Group hosts by IP
+        try {
+            $hosts_by_ip = $this->parseHosts(array(
+                'ip' => $in->getOption('ip'),
+                'match' => $in->getOption('match'),
+                'enabled-only' => $enabled_only,
+                'disabled-only' => $disabled_only
+            ));
+        } catch(HostsFileNotReadable $ex) {
+            $out->writeln("<error>{$ex->getMessage()}</error>");
             exit;
         }
 
-        // Read the hosts file
-        $hosts = file_get_contents($this->hostsfile);
-        $hosts = explode("\n", $hosts);
-
-        // IP filter
-        $only_for_ip = $in->getOption('ip');
-        // Regex filter
-        $match = $in->getOption('match');
-        // Enabled-only filters
-        $enabled_only = $in->getOption('enabled-only');
-        // Disabled-only filters
-        $disabled_only = $in->getOption('disabled-only');
-
         // Create a styles
-        $out->getFormatter()->setStyle('matched', new OutputFormatterStyle('cyan', null, array('underscore')));
-        $out->getFormatter()->setStyle('disabled', new OutputFormatterStyle('black', null, array('reverse')));
+        $formatter = $out->getFormatter();
+        $formatter->setStyle('ipaddr', new OutputFormatterStyle('cyan'));
+        $formatter->setStyle('matched', new OutputFormatterStyle('cyan', null, array('underscore')));
+        $formatter->setStyle('infoblock', new OutputFormatterStyle('white', 'cyan'));
 
-        // Group hosts by IP
-        $hosts_by_ip = array();
-        foreach ($hosts as $ln) {
-            // Skip generic comments
-            if (!preg_match('/^#?\d+.\d+.\d+.\d+/', $ln)) {
-                continue;
-            }
-
-            // Split ip from host(s)
-            list($ip, $host) = preg_split('/[\s\t]+/', $ln, 2);
-
-            // Filter hosts by IP
-            if ($only_for_ip and $only_for_ip !== $ip) {
-                continue;
-            }
-
-            // Filter hosts by pattern
-            if ($match and !preg_match("/$match/i", $host)) {
-                continue;
-            }
-
-            // Highlight matches
-            if ($match) {
-                $host = preg_replace("/($match)/i", '<matched>$1</matched>', $host);
-            }
-
-            // Highlight disabled
-            if (strncmp($ln, '#', 1) == 0) {
-                $host = "<disabled>$host</disabled>";
-            }
-
-            // @todo enabled/disabled only filter
-
-            $hosts_by_ip[trim($ip, '#')][] = $host;
+        if ($enabled_only or $disabled_only) {
+            $this->showBlock($out, "Showing [".($enabled_only ? 'en' : 'dis')."abled] hosts only", 'info');
         }
 
         foreach ($hosts_by_ip as $ip => $host_list) {
-            $out->writeln("Hosts for IP <info>$ip</info>");
+            if (!count($host_list)) {
+                continue;
+            }
+
+            $out->writeln("Hosts for IP <ipaddr>$ip</ipaddr>");
 
             foreach ($host_list as $host) {
-                $out->writeln(" - <comment>$host</comment>");
+                $out->writeln(" - <info>$host</info>");
             }
 
             $out->writeln("");
+        }
+
+        if (!$enabled_only and !$disabled_only) {
+            $out->writeln("Colors:");
+            $out->writeln("* <info>enabled</info> hosts");
+            $out->writeln("* <comment>disabled</comment> hosts");
         }
     }
 }

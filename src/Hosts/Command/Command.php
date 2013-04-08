@@ -1,21 +1,14 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: flatline
- * Date: 4/6/13
- * Time: 7:22 PM
- * To change this template use File | Settings | File Templates.
- */
 
-namespace Flatline\Command;
+namespace Hosts\Command;
 
 
-use Symfony\Component\Console\Command\Command as SymfonyCommand;
+use Symfony\Component\Console\Command\Command as BaseCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 
-class Command extends SymfonyCommand
+class Command extends BaseCommand
 {
     protected $hostsfile = '/etc/hosts';
 

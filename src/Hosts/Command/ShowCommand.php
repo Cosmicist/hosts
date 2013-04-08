@@ -7,22 +7,22 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Flatline\Command\Hosts;
+namespace Hosts\Command;
 
 
-use Flatline\Command\Command;
-use Flatline\Command\Exception\HostsFileNotReadable;
+use Hosts\Command\Command;
+use Hosts\Exception\HostsFileNotReadable;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 
-class ListCommand extends Command
+class ShowCommand extends Command
 {
     protected function configure()
     {
         $this
-            ->setName("list")
+            ->setName("show")
             ->setDescription("Show a list of all hosts")
             ->addOption('enabled-only', 'e', InputOption::VALUE_NONE, 'Show only enabled hosts')
             ->addOption('disabled-only', 'd', InputOption::VALUE_NONE, 'Show only disabled hosts')

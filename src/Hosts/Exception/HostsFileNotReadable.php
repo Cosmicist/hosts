@@ -1,6 +1,6 @@
 <?php
 
-namespace Flatline\Command\Exception;
+namespace Hosts\Exception;
 
 
 class HostsFileNotReadable extends \Exception

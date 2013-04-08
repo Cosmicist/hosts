@@ -1,8 +1,8 @@
 <?php
 
-namespace Flatline\Command\Hosts;
+namespace Hosts\Command;
 
-use Flatline\Command\Command;
+use Hosts\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;

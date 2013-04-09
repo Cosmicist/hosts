@@ -25,10 +25,11 @@ At this point you should be able to run it like this `php bin/hosts`.
 To install it globally, you need to compile it to a single phar file and copy it
 to `/usr/local/bin`.
 
-1. Run `php bin/compile` to generage `hosts.phar`
+1. Generate `hosts.phar` by running `php bin/compile`
 2. Run `sudo cp hosts.phar /usr/local/bin/hosts`
+3. Make it executable `sudo chmod a+x /usr/local/bin/hosts`
 
-Now you should be able to run it directly:
+You should now be able to run it directly:
 
 ```
 $ hosts add somehost

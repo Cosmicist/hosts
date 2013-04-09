@@ -16,7 +16,7 @@ class ToggleCommand extends Command
         $this
             ->setName('toggle')
             ->setDescription("Enable/Disable a host")
-            ->addArgument('hostname', InputArgument::REQUIRED, 'The hostname you want to add')
+            ->addArgument('hostname', InputArgument::REQUIRED, 'The hostname you want to toggle')
             ->addOption('ip', null, InputOption::VALUE_REQUIRED, 'Toggle hostname for the specified IP address')
             ->addOption('force-enable', 'e', InputOption::VALUE_NONE, 'Force enable host')
             ->addOption('force-disable', 'd', InputOption::VALUE_NONE, 'Force disable host')

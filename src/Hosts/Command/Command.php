@@ -25,7 +25,18 @@ class Command extends BaseCommand
     {
         $hosts = $this->parseHosts(array(), false);
 
-        return in_array($host, (array)$hosts[$ip]);
+        if ($ip === 'any') {
+            // Merge all hosts in a one-dimension array
+            $grouped = array_values($hosts);
+            $hosts = array();
+            foreach ($grouped as $group) {
+                $hosts = array_merge($hosts, $group);
+            }
+        } else {
+            $hosts = (array)$hosts[$ip];
+        }
+
+        return in_array($host, $hosts);
     }
 
     protected function parseHosts(array $filters = array(), $styled = true)
@@ -68,7 +79,6 @@ class Command extends BaseCommand
             if ($match and !preg_match("/$match/i", $host)) {
                 continue;
             }
-
             // Highlight matches
             if ($styled and $match) {
                 $host = preg_replace("/($match)/i", '<matched>$1</matched>', $host);

@@ -107,6 +107,7 @@ class Command extends BaseCommand
         }
 
         $infoMessage = (array)$message;
+        $out->writeln('');
         $out->writeln($this->getHelperSet()->get('formatter')->formatBlock($infoMessage, $status, true));
         $out->writeln('');
     }

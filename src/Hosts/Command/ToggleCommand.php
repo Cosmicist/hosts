@@ -97,9 +97,12 @@ class ToggleCommand extends Command
             );
 
             $lineMatch = $matches[$key];
-        } else {
+        } elseif (count($matches) == 1) {
             // Only one host found
             $lineMatch = $matches[0];
+        } else {
+            $this->showBlock($out, "No hosts matching [$hostname] found", 'error');
+            exit(1);
         }
 
         $hostsfile = file_get_contents($this->hostsfile);

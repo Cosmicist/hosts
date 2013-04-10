@@ -107,11 +107,15 @@ class ToggleCommand extends Command
             "/#?$lineMatch/i",
             function ($matches) use (&$action, $forceEnable, $forceDisable) {
                 // @todo Force enable/disable!!
-                if (preg_match('/^#/', $matches[0])) {
+                if (!$forceDisable and ($forceEnable or preg_match('/^#/', $matches[0]))) {
                     $rs = preg_replace('/^#/', '', $matches[0]);
                     $action = 'enabled';
                 } else {
-                    $rs = "#{$matches[0]}";
+                    $rs = $matches[0];
+                    // Only add # if there isn't one already
+                    if (!preg_match('/^#/', $rs)) {
+                        $rs = "#{$rs}";
+                    }
                     $action = 'disabled';
                 }
 

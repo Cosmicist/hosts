@@ -33,7 +33,7 @@ class Command extends BaseCommand
                 $hosts = array_merge($hosts, $group);
             }
         } else {
-            $hosts = (array)$hosts[$ip];
+            $hosts = (array)@$hosts[$ip];
         }
 
         return in_array($host, $hosts);

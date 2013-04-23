@@ -29,8 +29,7 @@ class ToggleCommand extends Command
 
         // Check if hosts file is writable
         if (!is_writable($this->hostsfile)) {
-            $this->showBlock($out, "Can't write hosts file! Run the command as root.");
-            exit;
+            $this->error($out, "Can't write hosts file! Run the command as root.");
         }
 
         $hostname       = $in->getArgument('hostname');
@@ -86,30 +85,35 @@ class ToggleCommand extends Command
             $dialog = $this->getHelperSet()->get('dialog');
             $key = $dialog->askAndValidate(
                 $out,
-                'Which of the matched hosts do you want to '.strtolower($mode).'? ',
+                'Select host to '.strtolower($mode).' (Leave empty to cancel): ',
                 function ($answer) use ($matches) {
                     $key = (int)$answer - 1;
                     if (!array_key_exists($key, $matches)) {
+                        if ($answer == 0) {
+                            return false;
+                        }
                         throw new \RuntimeException("$answer is not a valid option");
                     }
                     return (int)$key;
                 }
             );
 
+            if (!$key) {
+                $this->Cancel($out, 'No hosts were removed', 'warning');
+            }
+
             $lineMatch = $matches[$key];
         } elseif (count($matches) == 1) {
             // Only one host found
             $lineMatch = $matches[0];
         } else {
-            $this->showBlock($out, "No hosts matching [$hostname] found", 'error');
-            exit(1);
+            $this->error($out, "No hosts matching [$hostname] found");
         }
 
         $hostsfile = file_get_contents($this->hostsfile);
         $hostsfile = preg_replace_callback(
             "/#?$lineMatch/i",
             function ($matches) use (&$action, $forceEnable, $forceDisable) {
-                // @todo Force enable/disable!!
                 if (!$forceDisable and ($forceEnable or preg_match('/^#/', $matches[0]))) {
                     $rs = preg_replace('/^#/', '', $matches[0]);
                     $action = 'enabled';
@@ -126,12 +130,9 @@ class ToggleCommand extends Command
             },
             $hostsfile
         );
-
-        $this->showBlock($out, "The host was [$action] successfully!", 'success');
-
         file_put_contents($this->hostsfile, $hostsfile);
 
-        $out->writeln('');
+        $this->success($out, "The host was [$action] successfully!", 'success');
     }
 
     protected function removeTags($str)

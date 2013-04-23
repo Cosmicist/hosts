@@ -27,8 +27,7 @@ class AddCommand extends Command
 
         // Check if hosts file is writable
         if (!is_writable($this->hostsfile)) {
-            $this->showBlock($out, "Can't write hosts file! Run the command as root.");
-            exit;
+            $this->error($out, "Can't write hosts file! Run the command as root.");
         }
 
         $ip = $in->getOption('ip');
@@ -37,8 +36,7 @@ class AddCommand extends Command
 
         // Check if host already exists
         if ($this->hostExists($hostname, $ip)) {
-            $this->showBlock($out, "Host '$hostname' already exists for IP $ip", 'warning');
-            exit;
+            $this->error($out, "Host '$hostname' already exists for IP $ip");
         }
 
         $disabledout = $disabled ? " <comment>(in disabled state)</comment>" : '';
@@ -47,7 +45,6 @@ class AddCommand extends Command
         // Add host to hosts file
         file_put_contents($this->hostsfile, "{$disabled}$ip\t$hostname\n", FILE_APPEND);
 
-        $out->writeln("<info>Done!</info>");
-        $out->writeln("");
+        $this->success($out, "Host [$hostname] successfully added!");
     }
 }

@@ -47,15 +47,13 @@ class ShowCommand extends Command
                 'disabled-only' => $disabled_only
             ));
         } catch(HostsFileNotReadable $ex) {
-            $out->writeln("<error>{$ex->getMessage()}</error>");
-            exit;
+            $this->error($out, $ex->getMessage());
         }
 
         // Create a styles
         $formatter = $out->getFormatter();
         $formatter->setStyle('ipaddr', new OutputFormatterStyle('cyan'));
         $formatter->setStyle('matched', new OutputFormatterStyle('cyan', null, array('underscore')));
-        $formatter->setStyle('infoblock', new OutputFormatterStyle('white', 'cyan'));
 
         if ($enabled_only or $disabled_only) {
             $this->showBlock($out, "Showing [".($enabled_only ? 'en' : 'dis')."abled] hosts only", 'info');

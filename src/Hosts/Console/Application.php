@@ -5,6 +5,7 @@ namespace Hosts\Console;
 use Hosts\Command\AddCommand;
 use Hosts\Command\ShowCommand;
 use Hosts\Command\ToggleCommand;
+use Hosts\Command\RemoveCommand;
 use Symfony\Component\Console\Application as BaseApp;
 
 class Application extends BaseApp
@@ -21,6 +22,7 @@ class Application extends BaseApp
         $commands[] = new ShowCommand();
         $commands[] = new AddCommand();
         $commands[] = new ToggleCommand();
+        $commands[] = new RemoveCommand();
 
         return $commands;
     }

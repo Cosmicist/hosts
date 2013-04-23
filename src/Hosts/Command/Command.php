@@ -121,4 +121,25 @@ class Command extends BaseCommand
         $out->writeln($this->getHelperSet()->get('formatter')->formatBlock($infoMessage, $status, true));
         $out->writeln('');
     }
+
+    protected function error(OutputInterface $out, $message, $status = 'error')
+    {
+        $this->showBlock($out, is_array($message) ? $message : ['Error', $message], $status);
+        $out->writeln('');
+        exit(2);
+    }
+
+    protected function cancel(OutputInterface $out, $message, $status = 'warning')
+    {
+        $this->showBlock($out, is_array($message) ? $message : ['Cancelled', $message], $status);
+        $out->writeln('');
+        exit(1);
+    }
+
+    protected function success(OutputInterface $out, $message, $status = 'success')
+    {
+        $this->showBlock($out, $message, $status);
+        $out->writeln('');
+        exit(0);
+    }
 }

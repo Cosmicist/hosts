@@ -10,12 +10,23 @@ use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 
 class Command extends BaseCommand
 {
-    protected $hostsfile = '/etc/hosts';
+    protected $hostsfiles = array(
+                                  '/etc/hosts',
+                                  '/private/etc/hosts',
+                                  'C:\Windows\System32\drivers\etc\hosts'
+    );
+
+    protected $hostsfile = false;
 
     protected function execute(InputInterface $in, OutputInterface $out)
     {
         // Check if hosts file exists
-        if (!file_exists($this->hostsfile)) {
+        foreach ($this->hostsfiles as $hostsfile) {
+            if (file_exists($hostsfile)) {
+                $this->hostsfile = $hostsfile;
+            }
+        }
+        if (!$this->hostsfile) {
             $this->showBlock($out, "Couldn't find hosts file at '{$this->hostsfile}'!");
             exit;
         }

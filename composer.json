@@ -1,6 +1,7 @@
 {
     "name": "flatline/hosts",
     "description": "CLI tool to manage hosts file",
+    "license": "MIT",
     "minimum-stability": "dev",
     "authors": [
         {

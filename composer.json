@@ -17,5 +17,6 @@
         "psr-0": {
             "Hosts": "src/"
         }
-    }
+    },
+    "bin": ["bin/hosts"]
 }

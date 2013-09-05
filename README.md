@@ -12,28 +12,41 @@ Requirements
 Installation
 ------------
 
-As of now, the only way to install it is from source, but fear not, it's really
-simple.
+1. Run `git clone git@github.com:xFlatlinex/hosts.git` to clone the repo.
+2. Run `composer install` to install dependencies.
 
-1. Run `git clone git@github.com:xFlatlinex/hosts.git`
-2. Run `composer install`
-
-At this point you should be able to run it like this `php bin/hosts`.  
+At this point you should be able to run it like this `php bin/hosts`.
 
 ### Global installation
 
-To install it globally, you need to compile it to a single phar file and copy it
-to `/usr/local/bin`.
+There are two ways to install it. Using composer global or compile the phar and
+move it to your corresponding `bin` dir. Note that both methods need composer,
+but the first one needs composer to be installed globally.
 
-1. Generate `hosts.phar` by running `php bin/compile`
-2. Run `sudo cp hosts.phar /usr/local/bin/hosts`
-3. Make it executable `sudo chmod a+x /usr/local/bin/hosts`
+After you install it you should be able to run it directly:
 
-You should now be able to run it directly:
-
-```
+```bash
 $ hosts add somehost
 ```
+
+#### With Composer installed globally
+
+First, make sure you have ~/.composer/vendor/bin/ in your path.  
+Then run the following composer command:
+
+```bash
+$ composer global require 'flatline/hosts=dev-master'
+```
+
+#### With Composer phar
+
+This way, you need to compile it to a single phar file and then copy it to
+`/usr/local/bin`.
+
+1. Clone the repo and install dependencies.
+2. Generate `hosts.phar` by running `php bin/compile`
+3. Run `sudo cp hosts.phar /usr/local/bin/hosts`
+4. Make it executable `sudo chmod a+x /usr/local/bin/hosts`
 
 Usage
 -----
@@ -45,6 +58,7 @@ Currently available commands:
 * Run `hosts add [hostname] [options]` to add a host
 * Run `hosts toggle [hostname] [options]` to enable/disable a host
 * Run `hosts show [options]` to show a list of hosts
+* Run `hosts remove [options]` to remove a host from the hosts file
 
 All of the commands have several options and filters, you can check them out by
 running `hosts help [command]`.

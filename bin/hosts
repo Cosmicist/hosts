@@ -1,7 +1,14 @@
 #!/usr/bin/env php
 <?php
 
-require __DIR__."/../vendor/autoload.php";
+$home = posix_getpwuid(posix_getuid())['dir'];
+$autoload = __DIR__.'/../vendor/autoload.php';
+
+if (preg_match('/\.composer/', __DIR__)) {
+    $autoload = $home.'/.composer/vendor/autoload.php';
+}
+
+require $autoload;
 
 use Hosts\Console\Application;
 
